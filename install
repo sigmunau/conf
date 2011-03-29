@@ -12,3 +12,9 @@ do
     cp $f ~/.$bf
 done
 
+for f in ssh/*
+do
+    bf=`basename $f`
+    rm ~/.ssh/$bf
+    ln -s `pwd`/$f ~/.ssh/$bf
+done
