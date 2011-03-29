@@ -18,3 +18,13 @@ do
     rm ~/.ssh/$bf
     ln -s `pwd`/$f ~/.ssh/$bf
 done
+
+ZSH=/usr/local/share/zsh/site-functions/
+for f in zsh/*
+do
+    bf=`basename $f`
+    if cmp -s $f $ZSH/$bf
+    then
+        sudo cp $f $ZSH
+    fi
+done
