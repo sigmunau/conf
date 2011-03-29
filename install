@@ -1,0 +1,13 @@
+#!/bin/bash
+mkdir -p ~/bin
+
+for f in bin/*
+do
+    cp $f ~/bin/
+done
+
+for f in conf/*
+do
+    cp $f ~/.$f
+done
+
