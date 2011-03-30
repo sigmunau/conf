@@ -1,7 +1,16 @@
 eval $(dircolors -b)
 export PROMPT='%n@%m%u:%30<..<%~%b%(!.#.$) ' 
 export MAIL=~/Mail/inbox
-export EDITOR=jed
+if which emacs >/dev/null
+then
+    EDITOR=emacs
+elif which jed >/dev/null
+then
+    EDITOR=jed
+else
+    EDITOR=nano
+fi
+export EDITOR
 
 HISTSIZE=1000
 SAVEHIST=1000
