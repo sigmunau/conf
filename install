@@ -15,11 +15,16 @@ done
 for f in ssh/*
 do
     bf=`basename $f`
-    rm ~/.ssh/$bf
-    ln -s `pwd`/$f ~/.ssh/$bf
+    target=~/.ssh/$bf
+    test -e $target && rm $target
+    ln -fs `pwd`/$f $target
 done
 
 ZSH=/usr/local/share/zsh/site-functions/
+if [ ! -d "$ZSH" ]
+then
+    ZSH=/usr/share/zsh/site-functions
+fi
 for f in zsh/*
 do
     bf=`basename $f`
