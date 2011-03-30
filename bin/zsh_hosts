@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/env zsh
 
 hosts=(tromso-gw.snap.tv oslo-gw.snap.tv sepp.snap.tv funshop.snap.tv milch.snap.tv monitoring.snap.tv dist.snap.tv svn.snap.tv)
 #ssh-stuff fra tollef
