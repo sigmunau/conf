@@ -1,0 +1,294 @@
+(setq debug-on-error nil)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
+
+(defun my-jde-mode-hook ()
+  (jde-abbrev-mode))
+(add-hook 'jde-mode-hook 'my-jde-mode-hook)
+
+; Python-ting
+;(autoload 'python-mode "python-mode" "Python editing mode." t)
+;(setq auto-mode-alist
+;      (cons '("\\.py$" . python-mode) auto-mode-alist))
+;(setq interpreter-mode-alist
+;      (cons '("python" . python-mode)
+;            interpreter-mode-alist))
+;
+(load-library "cmake-mode")
+(setq auto-mode-alist (append
+                       (list
+                        '("SCons" . python-mode)
+                        '("\\.ebuild$" . sh-mode)
+                        '("\\.cc$" . c++-mode)
+                        '("\\.c$" . c-mode)
+                        '("\\.C$" . c++-mode)
+                        '("\\.ui.h" . c++-mode) 
+                        '("\\.pl$" . perl-mode)
+                        '("\\.el$" . lisp-mode)
+                        '("\\.html$" . html-helper-mode)
+                        '("\\.java$" . jde-mode)
+						'("CMake" . cmake-mode)
+						'("\\.frag" . c++-mode)
+						'("\\.vert" . c++-mode)
+						'("\\.cg" . c++-mode)
+			)
+                       auto-mode-alist))
+(defun linux-c-mode ()
+  "C mode with adjusted defaults for use with the Linux kernel."
+  (interactive)
+  (c-mode)
+  (c-set-style "K&R")
+  (setq tab-width 8)
+  (setq indent-tabs-mode t)
+  (setq c-basic-offset 8))
+(setq c-basic-offset 4)
+(setq c++-basic-offset 4)
+(setq sgml-indent-step 4)
+;;; Keybindings
+
+(global-set-key [(control m)] 'newline-and-indent)
+(global-set-key [f3] 'other-window)
+(global-set-key [S-f3] 'find-file-frame)
+(global-set-key [f4] 'save-buffer)
+(global-set-key [f6] 'goto-line)
+(global-set-key [M-f3] 'kill-this-buffer)
+(global-set-key [M-f4] 'save-buffers-kill-emacs)
+(global-set-key [C-left]  'backward-word)
+(global-set-key [C-right] 'forward-word)
+(global-set-key [C-up]    'backward-paragraph)
+(global-set-key [C-down]  'forward-paragraph)
+(global-set-key [insert]      'overwrite-mode)
+(global-set-key [delete]      'delete-char)
+(global-set-key [home]        'beginning-of-line)
+(global-set-key [end]         'end-of-line)
+(global-set-key [prior]       'scroll-down)
+(global-set-key [next]        'scroll-up)
+(global-set-key [C-backspace] 'backward-kill-word)
+(global-set-key [C-insert]    'kill-ring-save)
+(global-set-key [C-delete]    'delete-region)
+(global-set-key [C-home]      'beginning-of-buffer)
+(global-set-key [C-end]       'end-of-buffer)
+(global-set-key [M-prior]      'yic-prev-buffer)
+(global-set-key [M-next]       'yic-next-buffer)
+(global-set-key [S-insert]    'yank)
+(global-set-key [S-delete]    'kill-region)
+(global-set-key [C-tab]       'hippie-expand)
+(global-set-key [ret] 	      'newline-and-indent)
+(global-set-key [C-c C-g]     'jde-gen-get-set )
+
+(set-cursor-color "purple")
+(setq display-time-24hr-format t)
+(setq display-time-day-and-date t)
+
+;;;;; set up 8bit handling
+
+ ; (set-input-mode t nil '8bit)          ; right 8bit key handling
+ ; (load-library "iso-syntax")           ; Proper i18n case handling
+
+; Display full iso8859-1 character set
+(set-input-mode t nil '8bit)
+
+; mouse wheel
+(defun up-slightly () (interactive) (scroll-up 5))
+(defun down-slightly () (interactive) (scroll-down 5))
+(global-set-key [mouse-4] 'down-slightly)
+(global-set-key [mouse-5] 'up-slightly)
+
+(defun up-one () (interactive) (scroll-up 1))
+(defun down-one () (interactive) (scroll-down 1))
+(global-set-key [S-mouse-4] 'down-one)
+(global-set-key [S-mouse-5] 'up-one)
+     
+     
+(defun up-a-lot () (interactive) (scroll-up))
+(defun down-a-lot () (interactive) (scroll-down))
+(global-set-key [C-mouse-4] 'down-a-lot)
+(global-set-key [C-mouse-5] 'up-a-lot)
+
+(setq scroll-bar-mode nil
+      show-paren-style 'expression)
+
+(show-paren-mode t)
+(global-font-lock-mode t)
+(font-lock-mode 1)
+(if (getenv "DISPLAY")
+    (progn
+      (set-background-color "gray60")
+      (set-foreground-color "black")
+      )
+  )
+(tool-bar-mode 0)
+(toggle-scroll-bar -1)
+(menu-bar-mode 0)
+(setq kill-whole-line t)
+
+(define-key global-map "\C-x\C-P" 'PhpMMM)
+(define-key global-map "\C-c\C-i" 'ispell-buffer)
+(server-start)
+;(progn
+;  (remove-hook 'kill-buffer-hook 'server-kill-buffer)
+;  (add-hook 'server-switch-hook 'make-frame)
+;  (add-hook 'server-done-hook 'kill-this-buffer)
+;  (add-hook 'server-done-hook 'delete-frame))
+
+;; Make control+pageup/down scroll the other buffer
+(global-set-key [C-next] 'scroll-other-window)
+(global-set-key [C-prior] 'scroll-other-window-down)
+
+;;; Paste at cursor NOT mouse pointer position
+(setq mouse-yank-at-point t)
+
+;;; Type 'y' instead of 'yes'
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;;; Turn off backup files.
+(setq make-backup-files nil)
+
+;;; This is to not display the initial message (which says to a novice
+;;; user what to do first if he/she is confused).
+(setq inhibit-startup-message t)
+
+;;;
+;;; ...and this inhibits the startup blurb in the echo area.
+(setq inhibit-startup-echo-area-message "Hepp!")
+
+;;;
+;;; This disables down-arrow and C-n at the end of a buffer from adding
+;;; a new line to that buffer.
+
+(setq next-line-add-newlines nil)
+
+;;;
+;;; Overlap between window-fulls when scrolling by pages
+;(setq next-screen-context-lines 3)
+
+;;; Line number mode true
+(setq line-number-mode t)
+
+;; When you scroll down with the cursor, emacs will move down the buffer one
+;; line at a time, instead of in larger amounts.
+(setq scroll-step 1)
+;(load "/local/skel/all.emacs" nil t)
+
+
+
+
+
+
+(put 'downcase-region 'disabled nil)
+
+(put 'upcase-region 'disabled nil)
+
+(defun PhpMMM () (interactive)
+  (html-helper-mode)
+  (load-library "mmm-mode")
+  (mmm-mode-on)
+  (mmm-ify-by-regexp 'php-mode "<\\?" 0 "\\?>" 0 10)
+  (mmm-parse-buffer)
+)
+(defun mason-mode () (interactive)
+  (html-mode)
+  (load-library "mmm-mode")
+  (mmm-mode-on)
+  (mmm-ify-by-class 'mason)
+)
+
+(defun jsp-mode () (interactive)
+  (html-mode)
+  (load-library "mmm-mode")
+  (mmm-mode-on)
+  (mmm-ify-by-regexp 'jde-mode "<\\%" 0 "\\%>" 0 10)
+  (mmm-parse-buffer)
+)
+
+(load-library "js2")
+
+(setq auto-mode-alist
+	  (cons '("\\.qml$" . js-mode)
+      (cons '("\\.html$" . mason-mode)
+      (cons '("\\.mas$" . mason-mode)
+      (cons '("autohandler$" . mason-mode)
+      (cons '("\\.jsp$" . jsp-mode)
+      (cons '("\\.js$" . js2-mode)
+            auto-mode-alist)))))))
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(c-default-style (quote ((c-mode . "bsd") (c++-mode . "bsd") (java-mode . "java") (awk-mode . "awk") (other . "gnu"))))
+ '(c-offsets-alist (quote ((innamespace . 0))))
+ '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
+ '(indent-tabs-mode t)
+ '(js2-mirror-mode nil)
+ '(max-lisp-eval-depth 4000)
+ '(max-specpdl-size 10000)
+ '(mmm-major-mode-preferences (quote ((perl perl-mode) (javascript js2-mode javascript-mode c++-mode) (java jde-mode java-mode c++-mode) (css css-mode c++-mode))))
+ '(sgml-basic-offset 4)
+ '(tab-width 4))
+
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(font-latex-string-face ((((class color) (background light)) (:foreground "Wheat"))))
+ '(font-lock-builtin-face ((t (:blod t :foreground "Darkgreen"))))
+ '(font-lock-comment-face ((t (:italic t :foreground "Gray30"))))
+ '(font-lock-constant-face ((t (:foreground "DarkGreen"))))
+ '(font-lock-function-name-face ((t (:bold t :foreground "Brown"))))
+ '(font-lock-keyword-face ((t (:bold t :foreground "MediumBlue"))))
+ '(font-lock-string-face ((t (:foreground "Wheat"))))
+ '(font-lock-type-face ((t (:bold t :foreground "DarkSlateGray"))))
+ '(font-lock-variable-name-face ((t (:foreground "Sienna"))))
+ '(highlight ((t (:background "orange"))))
+ '(jde-java-font-lock-constant-face ((((class color) (background light)) (:foreground "Sienna"))))
+ '(jde-java-font-lock-link-face ((t (:italic nil :underline t :foreground "lightblue"))))
+ '(jde-java-font-lock-modifier-face ((((class color) (background light)) (:foreground "Blue"))))
+ '(jde-java-font-lock-number-face ((((class color) (background light)) (:foreground "Khaki"))))
+ '(mmm-default-submode-face ((t (:background "gray50"))))
+ '(mode-line ((t (:foreground "white" :background "DimGray"))))
+ '(region ((t (:background "blue"))))
+ '(show-paren-match ((((class color)) (:bold t :foreground "White"))))
+ '(show-paren-mismatch ((((class color)) (:bold t :foreground "Red")))))
+
+(add-hook 'c-mode-common-hook
+  (lambda() 
+    (local-set-key  (kbd "C-c o") 'ff-find-other-file)))
+
+(setq cua-auto-tabify-rectangles nil)
+(defadvice align (around smart-tabs activate)
+  (let ((indent-tabs-mode nil)) ad-do-it))
+(defadvice align-regexp (around smart-tabs activate)
+  (let ((indent-tabs-mode nil)) ad-do-it))
+(defadvice indent-relative (around smart-tabs activate)
+  (let ((indent-tabs-mode nil)) ad-do-it))
+(defadvice indent-according-to-mode (around smart-tabs activate)
+  (let ((indent-tabs-mode indent-tabs-mode))
+	(if (memq indent-line-function
+			  '(indent-relative
+				indent-relative-maybe))
+		(setq indent-tabs-mode nil))
+	ad-do-it))
+(defmacro smart-tabs-advice (function offset)
+  `(progn
+	 (defvaralias ',offset 'tab-width)
+	 (defadvice ,function (around smart-tabs activate)
+	   (cond
+		(indent-tabs-mode
+		 (save-excursion
+		   (beginning-of-line)
+		   (while (looking-at "\t*\\( +\\)\t+")
+			 (replace-match "" nil nil nil 1)))
+		 (setq tab-width tab-width)
+		 (let ((tab-width fill-column)
+			   (,offset fill-column)
+			   (wstart (window-start)))
+		   (unwind-protect
+			   (progn ad-do-it)
+			 (set-window-start (selected-window) wstart))))
+		(t
+		 ad-do-it)))))
+(smart-tabs-advice c-indent-line c-basic-offset)
+(smart-tabs-advice c-indent-region c-basic-offset)
+(add-hook 'cmake-mode-hook (lambda () ( setq indent-tabs-mode nil)))

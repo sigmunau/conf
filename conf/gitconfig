@@ -2,4 +2,21 @@
 	default = tracking
 [user]
 	name = Sigmund Augdal
-	email = sigmund@snap.tv
+	email = sigmund.augdal@sonowand.com
+[diff "odf"]
+      textconv=odt2txt
+[diff "docx"]
+	textconv = antiword
+[diff "doc"]
+	textconv = antiword
+[diff "lvdiff"]
+	command = lvdiff.sh
+[giggle]
+	main-window-maximized = false
+	main-window-geometry = 1201x804+293+145
+	file-view-vpane-position = 446
+	main-window-view = HistoryView
+	history-view-vpane-position = 409
+	file-view-hpane-position = 357
+[alias]
+	st=status

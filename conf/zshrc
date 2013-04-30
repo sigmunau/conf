@@ -3,7 +3,7 @@ export PROMPT='%n@%m%u:%30<..<%~%b%(!.#.$) '
 export MAIL=~/Mail/inbox
 if which emacs >/dev/null
 then
-    EDITOR=emacs
+    EDITOR=emacsclient
 elif which jed >/dev/null
 then
     EDITOR=jed
@@ -12,12 +12,12 @@ else
 fi
 export EDITOR
 
-HISTSIZE=1000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE=~/.history
 setopt inc_append_history
 setopt promptsubst
-
+setopt HIST_IGNORE_DUPS
 
 alias ls='ls --color=auto'
 alias firefox-3.0='firefox-3.0 -p firefox-3.0'
@@ -60,3 +60,9 @@ prompt wunjo
 if [ -d ~/bin ] ; then 
     PATH=$PATH:~/bin
 fi
+bindkey    "^[[3~"          delete-char
+bindkey    "^[3;5~"         delete-char
+bindkey ";5C" forward-word
+bindkey ";5D" backward-word
+
+compdef _precommand xvfb-run
