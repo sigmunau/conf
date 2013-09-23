@@ -20,6 +20,11 @@ do
     ln -fs `pwd`/$f $target
 done
 
+if [ ! -e ~/zsh ]
+then
+    ln -sf `pwd`/user_zsh ~/zsh
+fi
+
 ZSH=/usr/local/share/zsh/site-functions/
 if [ ! -d "$ZSH" ]
 then
