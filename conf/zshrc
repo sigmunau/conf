@@ -46,7 +46,7 @@ preexec() {
 host_stuff
 #bruk egne funksjoner
 fpath=(~/zsh $fpath)
-#autoload -U ~/zsh/*(:t)
+autoload -U ~/zsh/*(:t)
 
 #mer compintall
 autoload -U compinit
