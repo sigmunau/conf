@@ -46,7 +46,7 @@ preexec() {
 host_stuff
 #bruk egne funksjoner
 fpath=(~/zsh $fpath)
-#autoload -U ~/zsh/*(:t)
+autoload -U ~/zsh/*(:t)
 
 #mer compintall
 autoload -U compinit
@@ -66,3 +66,8 @@ bindkey ";5C" forward-word
 bindkey ";5D" backward-word
 
 compdef _precommand xvfb-run
+eval "$(rbenv init -)"
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /etc/bash_completion.d/virtualenvwrapper
