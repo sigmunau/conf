@@ -67,3 +67,7 @@ bindkey ";5D" backward-word
 
 compdef _precommand xvfb-run
 eval "$(rbenv init -)"
+
+export WORKON_HOME=$HOME/.virtualenvs
+export PROJECT_HOME=$HOME/Devel
+source /etc/bash_completion.d/virtualenvwrapper
