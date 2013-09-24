@@ -13,7 +13,7 @@
 ;      (cons '("python" . python-mode)
 ;            interpreter-mode-alist))
 ;
-(load-library "cmake-mode")
+;(load-library "cmake-mode")
 (setq auto-mode-alist (append
                        (list
                         '("SCons" . python-mode)
