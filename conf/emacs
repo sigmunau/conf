@@ -225,7 +225,8 @@
  '(max-specpdl-size 10000)
  '(mmm-major-mode-preferences (quote ((perl perl-mode) (javascript js2-mode javascript-mode c++-mode) (java jde-mode java-mode c++-mode) (css css-mode c++-mode))))
  '(sgml-basic-offset 4)
- '(tab-width 4))
+ '(tab-width 4)
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
