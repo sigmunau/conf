@@ -30,6 +30,7 @@
 						'("\\.frag" . c++-mode)
 						'("\\.vert" . c++-mode)
 						'("\\.cg" . c++-mode)
+						'("\\.mak" . html-mode)
 			)
                        auto-mode-alist))
 (defun linux-c-mode ()
