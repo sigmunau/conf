@@ -2,7 +2,7 @@
 	default = tracking
 [user]
 	name = Sigmund Augdal
-	email = sigmund.augdal@sonowand.com
+	email = sigmund.augdal@uninett.no
 [diff "odf"]
       textconv=odt2txt
 [diff "docx"]
