@@ -3,7 +3,12 @@ export PROMPT='%n@%m%u:%30<..<%~%b%(!.#.$) '
 export MAIL=~/Mail/inbox
 if which emacs >/dev/null
 then
-    EDITOR=emacsclient
+    if [ -n "$DISPLAY" ]
+    then
+        EDITOR=emacsclient
+    else
+        EDITOR=emacs
+    fi
 elif which jed >/dev/null
 then
     EDITOR=jed
