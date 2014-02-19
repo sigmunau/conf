@@ -20,3 +20,5 @@
 	file-view-hpane-position = 357
 [alias]
 	st=status
+[color]
+	ui = auto
