@@ -1,13 +1,17 @@
 #!/usr/bin/env zsh
 
 hosts=(tromso-gw.snap.tv oslo-gw.snap.tv sepp.snap.tv funshop.snap.tv milch.snap.tv monitoring.snap.tv dist.snap.tv svn.snap.tv)
-#ssh-stuff fra tollef
-if [ -f ~/.ssh/known_hosts ]; then
-    hosts=($hosts `awk -F "[, ]" '{print $1}' ~/.ssh/known_hosts|grep -v '^|1|'`)
-fi
-if [ -f ~/.ssh/known_hosts2 ]; then
-    hosts=($hosts `awk -F "[, ]" '{print $1}' ~/.ssh/known_hosts2|grep -v '^|1|'`)
-fi
+
+function read_known_hosts () {
+    file=$1
+    awk -F " " '{print $1}' $file | grep -v '^|1|' | grep -v '#'|sed -e 's/,/ /g'
+}
+for file in ~/.ssh/known_hosts ~/.ssh/known_hosts2 /etc/ssh/ssh_known_hosts /etc/ssh/ssh_known_hosts2
+do
+    if [ -f $file ]; then
+        hosts=($hosts $(read_known_hosts $file))
+    fi
+done
 if [ -f ~/.ssh/config ]; then
     hosts=($hosts `grep ^Host ~/.ssh/config | sed s/Host\ // | egrep -v '^\*$'`)
 fi
