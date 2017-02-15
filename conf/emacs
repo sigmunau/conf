@@ -1,9 +1,5 @@
 (setq debug-on-error nil)
-(add-to-list 'load-path (expand-file-name "~/.emacs.d"))
-
-(defun my-jde-mode-hook ()
-  (jde-abbrev-mode))
-(add-hook 'jde-mode-hook 'my-jde-mode-hook)
+(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 
 (autoload 'powershell-mode "PowerShell-Mode")
 ; Python-ting
@@ -15,6 +11,33 @@
 ;            interpreter-mode-alist))
 ;
 ;(load-library "cmake-mode")
+
+(defun myphpmode ()
+  "php mode with tabs"
+  (interactive)
+  (php-mode)
+  (setq indent-tabs-mode t)
+)
+
+(defun tabs-off ()
+  "Turn off tabs"
+  (interactive)
+  (setq indent-tabs-mode nil)
+)
+
+(defun tabs-on ()
+  "Turn on tabs"
+  (interactive)
+  (setq indent-tabs-mode t)
+)
+
+(defun cql-mode ()
+  "edit cql files"
+  (interactive)
+  (sql-mode)
+  (sql-set-product 'ansi)
+  )
+
 (setq auto-mode-alist (append
                        (list
                         '("SCons" . python-mode)
@@ -22,18 +45,22 @@
                         '("\\.cc$" . c++-mode)
                         '("\\.c$" . c-mode)
                         '("\\.C$" . c++-mode)
-                        '("\\.ui.h" . c++-mode) 
+                        '("\\.ui.h" . c++-mode)
                         '("\\.pl$" . perl-mode)
                         '("\\.el$" . lisp-mode)
-                        '("\\.html$" . html-helper-mode)
-                        '("\\.java$" . jde-mode)
-						'("CMake" . cmake-mode)
-						'("\\.frag" . c++-mode)
-						'("\\.vert" . c++-mode)
-						'("\\.cg" . c++-mode)
-						'("\\.mak" . html-mode)
-						'("\\.ps1" . powershell-mode)
-			)
+                        '("\\.html$" . web-mode)
+                        '("\\.mustache$" . web-mode)
+                        '("\\.java$" . java-mode)
+                        '("CMake" . cmake-mode)
+                        '("\\.frag" . c++-mode)
+                        '("\\.vert" . c++-mode)
+                        '("\\.cg" . c++-mode)
+                        '("\\.mak" . web-mode)
+                        '("\\.ps1" . powershell-mode)
+                        '("\\.php" . php-mode)
+                        '("\\.tf" . conf-mode)
+                        '("\\.tfvars" . conf-mode)
+            )
                        auto-mode-alist))
 (defun linux-c-mode ()
   "C mode with adjusted defaults for use with the Linux kernel."
@@ -49,9 +76,7 @@
 ;;; Keybindings
 
 (global-set-key [(control m)] 'newline-and-indent)
-(global-set-key [f3] 'other-window)
 (global-set-key [S-f3] 'find-file-frame)
-(global-set-key [f4] 'save-buffer)
 (global-set-key [f6] 'goto-line)
 (global-set-key [M-f3] 'kill-this-buffer)
 (global-set-key [M-f4] 'save-buffers-kill-emacs)
@@ -75,8 +100,7 @@
 (global-set-key [S-insert]    'yank)
 (global-set-key [S-delete]    'kill-region)
 (global-set-key [C-tab]       'hippie-expand)
-(global-set-key [ret] 	      'newline-and-indent)
-(global-set-key [C-c C-g]     'jde-gen-get-set )
+(global-set-key [ret]         'newline-and-indent)
 
 (set-cursor-color "purple")
 (setq display-time-24hr-format t)
@@ -181,62 +205,53 @@
 
 (put 'upcase-region 'disabled nil)
 
-(defun PhpMMM () (interactive)
-  (html-helper-mode)
-  (load-library "mmm-mode")
-  (mmm-mode-on)
-  (mmm-ify-by-regexp 'php-mode "<\\?" 0 "\\?>" 0 10)
-  (mmm-parse-buffer)
-)
-(defun mason-mode () (interactive)
-  (html-mode)
-  (load-library "mmm-mode")
-  (mmm-mode-on)
-  (mmm-ify-by-class 'mason)
-)
-
-(defun jsp-mode () (interactive)
-  (html-mode)
-  (load-library "mmm-mode")
-  (mmm-mode-on)
-  (mmm-ify-by-regexp 'jde-mode "<\\%" 0 "\\%>" 0 10)
-  (mmm-parse-buffer)
-)
-
-(load-library "js2")
 (load-library "flymake-cursor")
 (ido-mode)
 (setq auto-mode-alist
-	  (cons '("\\.qml$" . js-mode)
-      (cons '("\\.html$" . mason-mode)
+      (cons '("\\.qml$" . js-mode)
       (cons '("\\.mas$" . mason-mode)
       (cons '("autohandler$" . mason-mode)
       (cons '("\\.jsp$" . jsp-mode)
       (cons '("\\.js$" . js2-mode)
-            auto-mode-alist)))))))
+            auto-mode-alist))))))
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(c-default-style (quote ((c-mode . "bsd") (c++-mode . "bsd") (java-mode . "java") (awk-mode . "awk") (other . "gnu"))))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(c-default-style
+   (quote
+    ((c-mode . "bsd")
+     (c++-mode . "bsd")
+     (java-mode . "java")
+     (awk-mode . "awk")
+     (other . "gnu"))))
  '(c-offsets-alist (quote ((innamespace . 0))))
- '(hippie-expand-try-functions-list (quote (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
+ '(hippie-expand-try-functions-list
+   (quote
+    (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
  '(indent-tabs-mode nil)
  '(js2-mirror-mode nil)
  '(max-lisp-eval-depth 4000)
  '(max-specpdl-size 10000)
- '(mmm-major-mode-preferences (quote ((perl perl-mode) (javascript js2-mode javascript-mode c++-mode) (java jde-mode java-mode c++-mode) (css css-mode c++-mode))))
+ '(mmm-major-mode-preferences
+   (quote
+    ((perl perl-mode)
+     (javascript js2-mode javascript-mode c++-mode)
+     (java java-mode c++-mode)
+     (css css-mode c++-mode))))
+ '(puppet-indent-level 2)
+ '(scala-indent:step 4)
  '(sgml-basic-offset 4)
  '(tab-width 4)
  '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
 
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(flymake-errline ((((class color) (background light)) (:background "HotPink"))))
  '(flymake-warnline ((((class color) (background light)) (:background "LightBlue4"))))
  '(font-latex-string-face ((((class color) (background light)) (:foreground "Wheat"))))
@@ -249,15 +264,13 @@
  '(font-lock-type-face ((t (:bold t :foreground "DarkSlateGray"))))
  '(font-lock-variable-name-face ((t (:foreground "Sienna"))))
  '(highlight ((t (:background "orange"))))
- '(jde-java-font-lock-constant-face ((((class color) (background light)) (:foreground "Sienna"))))
- '(jde-java-font-lock-link-face ((t (:italic nil :underline t :foreground "lightblue"))))
- '(jde-java-font-lock-modifier-face ((((class color) (background light)) (:foreground "Blue"))))
- '(jde-java-font-lock-number-face ((((class color) (background light)) (:foreground "Khaki"))))
  '(mmm-default-submode-face ((t (:background "gray50"))))
  '(mode-line ((t (:foreground "white" :background "DimGray"))))
  '(region ((t (:background "blue"))))
  '(show-paren-match ((((class color)) (:bold t :foreground "White"))))
- '(show-paren-mismatch ((((class color)) (:bold t :foreground "Red")))))
+ '(show-paren-mismatch ((((class color)) (:bold t :foreground "Red"))))
+ '(web-mode-html-attr-name-face ((t (:foreground "sienna"))))
+ '(web-mode-html-tag-face ((t (:foreground "brown" :weight bold)))))
 
 (add-hook 'c-mode-common-hook
   (lambda() 
@@ -272,32 +285,32 @@
   (let ((indent-tabs-mode nil)) ad-do-it))
 (defadvice indent-according-to-mode (around smart-tabs activate)
   (let ((indent-tabs-mode indent-tabs-mode))
-	(if (memq indent-line-function
-			  '(indent-relative
-				indent-relative-maybe))
-		(setq indent-tabs-mode nil))
-	ad-do-it))
+    (if (memq indent-line-function
+              '(indent-relative
+                indent-relative-maybe))
+        (setq indent-tabs-mode nil))
+    ad-do-it))
 (defmacro smart-tabs-advice (function offset)
   `(progn
-	 (defvaralias ',offset 'tab-width)
-	 (defadvice ,function (around smart-tabs activate)
-	   (cond
-		(indent-tabs-mode
-		 (save-excursion
-		   (beginning-of-line)
-		   (while (looking-at "\t*\\( +\\)\t+")
-			 (replace-match "" nil nil nil 1)))
-		 (setq tab-width tab-width)
-		 (let ((tab-width fill-column)
-			   (,offset fill-column)
-			   (wstart (window-start)))
-		   (unwind-protect
-			   (progn ad-do-it)
-			 (set-window-start (selected-window) wstart))))
-		(t
-		 ad-do-it)))))
-(smart-tabs-advice c-indent-line c-basic-offset)
-(smart-tabs-advice c-indent-region c-basic-offset)
+     (defvaralias ',offset 'tab-width)
+     (defadvice ,function (around smart-tabs activate)
+       (cond
+        (indent-tabs-mode
+         (save-excursion
+           (beginning-of-line)
+           (while (looking-at "\t*\\( +\\)\t+")
+             (replace-match "" nil nil nil 1)))
+         (setq tab-width tab-width)
+         (let ((tab-width fill-column)
+               (,offset fill-column)
+               (wstart (window-start)))
+           (unwind-protect
+               (progn ad-do-it)
+             (set-window-start (selected-window) wstart))))
+        (t
+         ad-do-it)))))
+;(smart-tabs-advice c-indent-line c-basic-offset)
+;(smart-tabs-advice c-indent-region c-basic-offset)
 (add-hook 'cmake-mode-hook (lambda () ( setq indent-tabs-mode nil)))
 
 (autoload 'puppet-mode "puppet-mode" "Major mode for editing puppet manifests")
@@ -325,3 +338,14 @@
 (add-hook 'python-mode-hook 'flymake-mode)
 (setq cssm-indent-function 'cssm-c-style-indenter)
 (setq cssm-indent-level 4)
+(require 'iso-transl)
+(require 'package)
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+                         ("marmalade" . "http://marmalade-repo.org/packages/")
+                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(package-initialize)
+(mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
+(mmm-add-mode-ext-class 'html-mode "\\.mak\\'" 'mako)
+(setq web-mode-engines-alist
+  '(("dust"    . "\\.html\\'"))
+  )
