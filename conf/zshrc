@@ -25,7 +25,6 @@ setopt promptsubst
 setopt HIST_IGNORE_DUPS
 
 alias ls='ls --color=auto'
-alias firefox-3.0='firefox-3.0 -p firefox-3.0'
 alias less='less -R'
 #fra zsh completion function artikkel
 zstyle ':completion:*' verbose yes
