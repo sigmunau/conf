@@ -242,6 +242,178 @@
      (java java-mode c++-mode)
      (css css-mode c++-mode))))
  '(puppet-indent-level 2)
+ '(safe-local-variable-values
+   (quote
+    ((c-comment-only-line-offset 0 . 0)
+     (eval progn
+           (defun my/point-in-defun-declaration-p nil
+             (let
+                 ((bod
+                   (save-excursion
+                     (c-beginning-of-defun)
+                     (point))))
+               (<= bod
+                   (point)
+                   (save-excursion
+                     (goto-char bod)
+                     (re-search-forward "{")
+                     (point)))))
+           (defun my/is-string-concatenation-p nil "Returns true if the previous line is a string concatenation"
+                  (save-excursion
+                    (let
+                        ((start
+                          (point)))
+                      (forward-line -1)
+                      (if
+                          (re-search-forward " \\+$" start t)
+                          t nil))))
+           (defun my/inside-java-lambda-p nil "Returns true if point is the first statement inside of a lambda"
+                  (save-excursion
+                    (c-beginning-of-statement-1)
+                    (let
+                        ((start
+                          (point)))
+                      (forward-line -1)
+                      (if
+                          (search-forward " -> {" start t)
+                          t nil))))
+           (defun my/trailing-paren-p nil "Returns true if point is a training paren and semicolon"
+                  (save-excursion
+                    (end-of-line)
+                    (let
+                        ((endpoint
+                          (point)))
+                      (beginning-of-line)
+                      (if
+                          (re-search-forward "[ ]*);$" endpoint t)
+                          t nil))))
+           (defun my/prev-line-call-with-no-args-p nil "Return true if the previous line is a function call with no arguments"
+                  (save-excursion
+                    (let
+                        ((start
+                          (point)))
+                      (forward-line -1)
+                      (if
+                          (re-search-forward ".($" start t)
+                          t nil))))
+           (defun my/arglist-cont-nonempty-indentation
+               (arg)
+             (if
+                 (my/inside-java-lambda-p)
+                 (quote +)
+               (if
+                   (my/is-string-concatenation-p)
+                   16
+                 (unless
+                     (my/point-in-defun-declaration-p)
+                   (quote ++)))))
+           (defun my/statement-block-intro
+               (arg)
+             (if
+                 (and
+                  (c-at-statement-start-p)
+                  (my/inside-java-lambda-p))
+                 0
+               (quote +)))
+           (defun my/block-close
+               (arg)
+             (if
+                 (my/inside-java-lambda-p)
+                 (quote -)
+               0))
+           (defun my/arglist-close
+               (arg)
+             (if
+                 (my/trailing-paren-p)
+                 0
+               (quote --)))
+           (defun my/arglist-intro
+               (arg)
+             (if
+                 (my/prev-line-call-with-no-args-p)
+                 (quote ++)
+               0))
+           (c-set-offset
+            (quote inline-open)
+            0)
+           (c-set-offset
+            (quote topmost-intro-cont)
+            (quote +))
+           (c-set-offset
+            (quote statement-block-intro)
+            (quote my/statement-block-intro))
+           (c-set-offset
+            (quote block-close)
+            (quote my/block-close))
+           (c-set-offset
+            (quote knr-argdecl-intro)
+            (quote +))
+           (c-set-offset
+            (quote substatement-open)
+            (quote +))
+           (c-set-offset
+            (quote substatement-label)
+            (quote +))
+           (c-set-offset
+            (quote case-label)
+            (quote +))
+           (c-set-offset
+            (quote label)
+            (quote +))
+           (c-set-offset
+            (quote statement-case-open)
+            (quote +))
+           (c-set-offset
+            (quote statement-cont)
+            (quote ++))
+           (c-set-offset
+            (quote arglist-intro)
+            (quote my/arglist-intro))
+           (c-set-offset
+            (quote arglist-cont-nonempty)
+            (quote
+             (my/arglist-cont-nonempty-indentation c-lineup-arglist)))
+           (c-set-offset
+            (quote arglist-close)
+            (quote my/arglist-close))
+           (c-set-offset
+            (quote inexpr-class)
+            0)
+           (c-set-offset
+            (quote access-label)
+            0)
+           (c-set-offset
+            (quote inher-intro)
+            (quote ++))
+           (c-set-offset
+            (quote inher-cont)
+            (quote ++))
+           (c-set-offset
+            (quote brace-list-intro)
+            (quote +))
+           (c-set-offset
+            (quote func-decl-cont)
+            (quote ++)))
+     (testargs . -h)
+     (eval add-to-list
+           (quote auto-mode-alist)
+           (quote
+            ("\\.js$" . rjsx-mode)))
+     (eval web-mode-set-engine "django")
+     (eval progn
+           (setq-local web-mode-engines-alist
+                       (quote
+                        (("django" . "\\.html\\'"))))
+           (put
+            (quote web-mode-engines-alist)
+            (quote permanent-local)
+            t)
+           (web-mode))
+     (sa-web-mode-engine . "django")
+     (web-mode-engine-alist
+      ("django" . "\\.html"))
+     (web-mode-markup-indent-offset 2)
+     (web-mode-markup-indentation-level . 2))))
  '(scala-indent:step 4)
  '(sgml-basic-offset 4)
  '(tab-width 4)
