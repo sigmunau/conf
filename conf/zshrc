@@ -87,7 +87,6 @@ export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Devel
 . /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 
-alias pdns='whois -h passiv2.cert.uninett.no'
 export VAULT_ADDR=https://vault.uninett.no:8200
 export DUO_PASSCODE=push
 
