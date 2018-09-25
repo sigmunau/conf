@@ -37,7 +37,7 @@
   (sql-mode)
   (sql-set-product 'ansi)
   )
-
+(add-to-list 'auto-mode-alist '("\\.\\(?:j2\\|erb\\)\\'" nil t))
 (setq auto-mode-alist (append
                        (list
                         '("SCons" . python-mode)
