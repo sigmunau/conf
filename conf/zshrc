@@ -16,13 +16,13 @@ else
     EDITOR=nano
 fi
 export EDITOR
-
 HISTSIZE=1000000
 SAVEHIST=1000000
 HISTFILE=~/.history
 setopt inc_append_history
 setopt promptsubst
 setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
 
 alias ls='ls --color=auto'
 alias less='less -R'
@@ -42,6 +42,18 @@ host_stuff() {
     if [ "$hosts" ]; then
         zstyle ':completion:*:hosts' hosts $hosts
     fi
+}
+
+placeholder() {
+    read -se "m?$1: "
+}
+
+zshaddhistory() {
+    echo "$1"|grep -cqv placeholder||return 0
+    echo "$1"|grep -cqP 'create secret.*--from-literal'&&return 2
+    echo "$1"|grep -cqP 'config set-credentials'&&return 2
+    echo "$1"|grep -cqP 'vault write'&&return 2
+    return 0
 }
 
 preexec() {
