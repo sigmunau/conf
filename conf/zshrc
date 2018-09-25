@@ -70,14 +70,11 @@ bindkey ";5C" forward-word
 bindkey ";5D" backward-word
 
 compdef _precommand xvfb-run
-eval "$(rbenv init -)"
 
 export WORKON_HOME=$HOME/.virtualenvs
 export PROJECT_HOME=$HOME/Devel
 . /usr/local/bin/virtualenvwrapper.sh
 
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
 alias pdns='whois -h passiv2.cert.uninett.no'
 export VAULT_ADDR=https://vault.uninett.no:8200
 export DUO_PASSCODE=push
