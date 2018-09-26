@@ -57,9 +57,6 @@ zshaddhistory() {
     return 0
 }
 
-preexec() {
-    host_stuff
-}
 host_stuff
 #bruk egne funksjoner
 fpath=(~/zsh $fpath)
@@ -71,8 +68,6 @@ compinit
 # End of lines added by compinstall
 
 autoload -U promptinit
-promptinit
-prompt wunjo
 
 if [ -d ~/bin ] ; then 
     PATH=$PATH:~/bin
@@ -91,4 +86,9 @@ export PROJECT_HOME=$HOME/Devel
 export VAULT_ADDR=https://vault.uninett.no:8200
 export DUO_PASSCODE=push
 
-source <(kubectl completion zsh)
+which kubectl >/dev/null 2>/dev/null && source <(kubectl completion zsh)
+promptinit
+prompt wunjo
+preexec() {
+    host_stuff
+}
