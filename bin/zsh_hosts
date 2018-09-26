@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-hosts=(tromso-gw.snap.tv oslo-gw.snap.tv sepp.snap.tv funshop.snap.tv milch.snap.tv monitoring.snap.tv dist.snap.tv svn.snap.tv)
+hosts=()
 
 function read_known_hosts () {
     file=$1
@@ -15,10 +15,7 @@ done
 if [ -f ~/.ssh/config ]; then
     hosts=($hosts `grep ^Host ~/.ssh/config | sed s/Host\ // | egrep -v '^\*$'`)
 fi
-#hosts=($hosts `avahi-browse -ckpar 2>/dev/null|awk -F';' '{print $7}'|grep --line-buffered -v '^$'|sort|uniq`)
-#hosts=($hosts `avahi-browse -ckpar 2>/dev/null|mawk -W interactive -F';' '{print $7}'|grep --line-buffered -v '^$'|(while read -t 1 host ; do echo "$host" ; done;killall avahi-browse)|sort|uniq`)
 hosts=($hosts `avahi-browse -kpar 2>/dev/null|mawk -W interactive -F';' '{print $7}'|grep --line-buffered -v '^$'|(while read -t 1 host ; do echo "$host" ; done;killall avahi-browse)|sort|uniq`)
 hosts=($hosts `cat /etc/hosts|grep -v '#'|grep -v '^\s*$'`)
-hosts=($hosts `dig -t axfr snap.tv|awk '{print $1, $4}' |perl -n -e 'chomp; ($n, $t) = split; $n =~ s/\.$//; print "$n\n" if $t eq "A" or $t eq "CNAME"'`)
 
 echo "${hosts}"> ~/.zshhosts
