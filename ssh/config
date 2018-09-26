@@ -1,0 +1,10 @@
+Host localhost
+     CheckHostIP no
+     StrictHostKeyChecking no
+     ForwardAgent yes
+
+Host *
+     StrictHostKeyChecking ask
+     ForwardAgent yes
+     SendEnv DUO_PASSCODE
+     HashKnownHosts no
