@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "==== treff i filnavn ===="
+git ls-files|grep $1
+echo "==== treff i innhold ===="
+git grep $1
