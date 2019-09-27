@@ -1,5 +1,5 @@
 [push]
-	default = tracking
+	default = current
 [user]
 	name = Sigmund Augdal
 	email = sigmund.augdal@uninett.no
@@ -20,5 +20,10 @@
 	file-view-hpane-position = 357
 [alias]
 	st=status
+	amend = commit --amend --no-edit
+	changes = log --pretty=short --reverse @{u}..
 [color]
 	ui = auto
+[rebase]
+	autosquash = true
+    autostash = true
