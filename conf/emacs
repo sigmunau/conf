@@ -2,6 +2,7 @@
 (add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp"))
 
 (autoload 'powershell-mode "PowerShell-Mode")
+
 ; Python-ting
 ;(autoload 'python-mode "python-mode" "Python editing mode." t)
 ;(setq auto-mode-alist
@@ -38,30 +39,6 @@
   (sql-set-product 'ansi)
   )
 (add-to-list 'auto-mode-alist '("\\.\\(?:j2\\|erb\\)\\'" nil t))
-(setq auto-mode-alist (append
-                       (list
-                        '("SCons" . python-mode)
-                        '("\\.ebuild$" . sh-mode)
-                        '("\\.cc$" . c++-mode)
-                        '("\\.c$" . c-mode)
-                        '("\\.C$" . c++-mode)
-                        '("\\.ui.h" . c++-mode)
-                        '("\\.pl$" . perl-mode)
-                        '("\\.el$" . lisp-mode)
-                        '("\\.html$" . web-mode)
-                        '("\\.mustache$" . web-mode)
-                        '("\\.java$" . java-mode)
-                        '("CMake" . cmake-mode)
-                        '("\\.frag" . c++-mode)
-                        '("\\.vert" . c++-mode)
-                        '("\\.cg" . c++-mode)
-                        '("\\.mak" . web-mode)
-                        '("\\.ps1" . powershell-mode)
-                        '("\\.php" . php-mode)
-                        '("\\.tf" . conf-mode)
-                        '("\\.tfvars" . conf-mode)
-            )
-                       auto-mode-alist))
 (defun linux-c-mode ()
   "C mode with adjusted defaults for use with the Linux kernel."
   (interactive)
@@ -228,6 +205,10 @@
      (awk-mode . "awk")
      (other . "gnu"))))
  '(c-offsets-alist (quote ((innamespace . 0))))
+ '(flycheck-checkers
+   (quote
+    (ada-gnat asciidoctor asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint css-stylelint cuda-nvcc cwl d-dmd dockerfile-hadolint emacs-lisp emacs-lisp-checkdoc erlang-rebar3 erlang eruby-erubis fortran-gfortran go-gofmt go-golint go-vet go-build go-test go-errcheck go-unconvert go-staticcheck groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy javascript-eslint javascript-jshint javascript-standard json-jsonlint json-python-json json-jq jsonnet less less-stylelint llvm-llc lua-luacheck lua markdown-markdownlint-cli markdown-mdl nix nix-linter opam perl perl-perlcritic php php-phpmd php-phpcs processing proselint protobuf-protoc protobuf-prototool pug puppet-parser puppet-lint python-flake8 python-pylint python-pycompile python-mypy r-lintr racket rpm-rpmlint rst-sphinx rst ruby-rubocop ruby-reek ruby-rubylint ruby ruby-jruby rust-cargo rust rust-clippy scala scala-scalastyle scheme-chicken scss-lint scss-stylelint sass/scss-sass-lint sass scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim slim-lint sql-sqlint systemd-analyze tcl-nagelfar terraform terraform-tflint tex-chktex tex-lacheck texinfo textlint typescript-tslint verilog-verilator vhdl-ghdl xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
+ '(flycheck-php-phpcs-executable "/home/sigmunda/bin/psalm")
  '(hippie-expand-try-functions-list
    (quote
     (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -241,10 +222,16 @@
      (javascript js2-mode javascript-mode c++-mode)
      (java java-mode c++-mode)
      (css css-mode c++-mode))))
+ '(package-selected-packages
+   (quote
+    (flycheck yaml-mode web-narrow-mode web-mode-edit-element scala-mode2 rjsx-mode restclient puppet-mode php-mode mmm-mode markdown-mode+ ido-vertical-mode groovy-mode go-mode dockerfile-mode django-mode)))
+ '(php-mode-coding-style (quote psr2))
  '(puppet-indent-level 2)
  '(safe-local-variable-values
    (quote
-    ((c-comment-only-line-offset 0 . 0)
+    ((flycheck-checker . php-phpcs)
+     (flycheck-checker . psalm)
+     (c-comment-only-line-offset 0 . 0)
      (eval progn
            (defun my/point-in-defun-declaration-p nil
              (let
@@ -513,7 +500,7 @@
 (require 'iso-transl)
 (require 'package)
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-                         ("marmalade" . "http://marmalade-repo.org/packages/")
+;                         ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
 (mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
@@ -521,3 +508,44 @@
 (setq web-mode-engines-alist
   '(("dust"    . "\\.html\\'"))
   )
+(setq auto-mode-alist (append
+                       (list
+                        '("SCons" . python-mode)
+                        '("\\.ebuild$" . sh-mode)
+                        '("\\.cc$" . c++-mode)
+                        '("\\.c$" . c-mode)
+                        '("\\.C$" . c++-mode)
+                        '("\\.ui.h" . c++-mode)
+                        '("\\.pl$" . perl-mode)
+                        '("\\.el$" . lisp-mode)
+                        '("\\.html$" . web-mode)
+                        '("\\.mustache$" . web-mode)
+                        '("\\.java$" . java-mode)
+                        '("CMake" . cmake-mode)
+                        '("\\.frag" . c++-mode)
+                        '("\\.vert" . c++-mode)
+                        '("\\.cg" . c++-mode)
+                        '("\\.mak" . web-mode)
+                        '("\\.ps1" . powershell-mode)
+                        '("\\.php" . php-mode)
+                        '("\\.tf" . conf-mode)
+                        '("\\.tfvars" . conf-mode)
+                        '("\\.twig" . web-mode)
+            )
+                       auto-mode-alist))
+
+(defun func-region (start end func)
+  "run a function over the region between START and END in current buffer."
+  (save-excursion
+    (let ((text (delete-and-extract-region start end)))
+      (insert (funcall func text)))))
+
+(defun url-hex-region (start end)
+  "urlencode the region between START and END in current buffer."
+  (interactive "r")
+  (func-region start end #'url-hexify-string))
+
+(defun url-unhex-region (start end)
+  "de-urlencode the region between START and END in current buffer."
+  (interactive "r")
+  (func-region start end #'url-unhex-string))
