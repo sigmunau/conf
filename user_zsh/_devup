@@ -1,0 +1,47 @@
+#compdef devup
+
+# Description
+# -----------
+#  zsh completion for docker-compose
+# -------------------------------------------------------------------------
+# Authors
+# -------
+#  * Steve Durrheimer <s.durrheimer@gmail.com>
+# -------------------------------------------------------------------------
+# Inspiration
+# -----------
+#  * @albers docker-compose bash completion script
+#  * @felixr docker zsh completion script : https://github.com/felixr/docker-zsh-completion
+# -------------------------------------------------------------------------
+
+__docker-compose_q() {
+    docker-compose 2>/dev/null $compose_options "$@"
+}
+
+# All services defined in docker-compose.yml
+__docker-compose_all_services_in_compose_file() {
+    local already_selected
+    local -a services
+    already_selected=$(echo $words | tr " " "|")
+    __docker-compose_q ps --services "$@" \
+        | grep -Ev "^(${already_selected})$"
+}
+
+# All services, even those without an existing container
+__docker-compose_services_all() {
+    [[ $PREFIX = -* ]] && return 1
+    integer ret=1
+    services=$(__docker-compose_all_services_in_compose_file "$@")
+    _alternative "args:services:($services)" && ret=0
+
+    return ret
+}
+
+
+__docker-compose_services() {
+    [[ $PREFIX = -* ]] && return 1
+    __docker-compose_services_all
+}
+
+_arguments \
+'*:services:__docker-compose_services' && ret=0
