@@ -91,6 +91,7 @@ export VAULT_ADDR=https://vault.uninett.no:8200
 export DUO_PASSCODE=push
 
 which kubectl >/dev/null 2>/dev/null && source <(kubectl completion zsh)
+which helm >/dev/null 2>/dev/null && source <(helm completion zsh)
 promptinit
 prompt wunjo
 preexec() {
