@@ -2,7 +2,7 @@
 	default = current
 [user]
 	name = Sigmund Augdal
-	email = sigmund.augdal@uninett.no
+	email = sigaug@signicat.com
 [diff "odf"]
       textconv=odt2txt
 [diff "docx"]
@@ -27,3 +27,5 @@
 [rebase]
 	autosquash = true
     autostash = true
+[fetch]
+	prune = on
