@@ -182,14 +182,13 @@
 
 (put 'upcase-region 'disabled nil)
 
-(load-library "flymake-cursor")
 (ido-mode)
 (setq auto-mode-alist
       (cons '("\\.qml$" . js-mode)
       (cons '("\\.mas$" . mason-mode)
       (cons '("autohandler$" . mason-mode)
       (cons '("\\.jsp$" . jsp-mode)
-      (cons '("\\.js$" . js2-mode)
+      (cons '("\\.js$" . web-mode)
             auto-mode-alist))))))
 
 (custom-set-variables
@@ -209,6 +208,8 @@
    (quote
     (ada-gnat asciidoctor asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint css-stylelint cuda-nvcc cwl d-dmd dockerfile-hadolint emacs-lisp emacs-lisp-checkdoc erlang-rebar3 erlang eruby-erubis fortran-gfortran go-gofmt go-golint go-vet go-build go-test go-errcheck go-unconvert go-staticcheck groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy javascript-eslint javascript-jshint javascript-standard json-jsonlint json-python-json json-jq jsonnet less less-stylelint llvm-llc lua-luacheck lua markdown-markdownlint-cli markdown-mdl nix nix-linter opam perl perl-perlcritic php php-phpmd php-phpcs processing proselint protobuf-protoc protobuf-prototool pug puppet-parser puppet-lint python-flake8 python-pylint python-pycompile python-mypy r-lintr racket rpm-rpmlint rst-sphinx rst ruby-rubocop ruby-reek ruby-rubylint ruby ruby-jruby rust-cargo rust rust-clippy scala scala-scalastyle scheme-chicken scss-lint scss-stylelint sass/scss-sass-lint sass scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim slim-lint sql-sqlint systemd-analyze tcl-nagelfar terraform terraform-tflint tex-chktex tex-lacheck texinfo textlint typescript-tslint verilog-verilator vhdl-ghdl xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
  '(flycheck-php-phpcs-executable "/home/sigmunda/bin/psalm")
+ '(help-at-pt-display-when-idle (quote (flymake-overlay)) nil (help-at-pt))
+ '(help-at-pt-timer-delay 0.9)
  '(hippie-expand-try-functions-list
    (quote
     (try-complete-file-name-partially try-complete-file-name try-expand-all-abbrevs try-expand-line try-expand-dabbrev try-expand-dabbrev-all-buffers try-expand-dabbrev-from-kill try-complete-lisp-symbol-partially try-complete-lisp-symbol)))
@@ -222,14 +223,20 @@
      (javascript js2-mode javascript-mode c++-mode)
      (java java-mode c++-mode)
      (css css-mode c++-mode))))
+ '(omnisharp-server-executable-path "/home/sigaug/bin/omnisharp")
  '(package-selected-packages
    (quote
-    (flycheck yaml-mode web-narrow-mode web-mode-edit-element scala-mode2 rjsx-mode restclient puppet-mode php-mode mmm-mode markdown-mode+ ido-vertical-mode groovy-mode go-mode dockerfile-mode django-mode)))
+    (company-math omnisharp csharp-mode scala-mode markdown-mode flycheck yaml-mode web-narrow-mode web-mode-edit-element scala-mode2 rjsx-mode restclient puppet-mode php-mode mmm-mode markdown-mode+ ido-vertical-mode groovy-mode go-mode dockerfile-mode django-mode)))
  '(php-mode-coding-style (quote psr2))
  '(puppet-indent-level 2)
  '(safe-local-variable-values
    (quote
-    ((flycheck-checker . php-phpcs)
+    ((create-lockfiles)
+     (eval setq web-mode-content-types-alist
+           (\`
+            (("jsx" \,
+              (concat default-directory ".*\\.js")))))
+     (flycheck-checker . php-phpcs)
      (flycheck-checker . psalm)
      (c-comment-only-line-offset 0 . 0)
      (eval progn
@@ -403,8 +410,13 @@
      (web-mode-markup-indentation-level . 2))))
  '(scala-indent:step 4)
  '(sgml-basic-offset 4)
+ '(smerge-command-prefix "c")
  '(tab-width 4)
- '(uniquify-buffer-name-style (quote post-forward) nil (uniquify)))
+ '(uniquify-buffer-name-style (quote post-forward) nil (uniquify))
+ '(web-mode-code-indent-offset 4)
+ '(web-mode-enable-auto-indentation nil))
+     
+
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -475,7 +487,8 @@
 (autoload 'puppet-mode "puppet-mode" "Major mode for editing puppet manifests")
 
 (add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
-(require 'flymake-puppet)
+(add-to-list 'auto-mode-alist '("\\.csproj$" . nxml-mode))
+;(require 'flymake-puppet)
 (add-hook 'puppet-mode-hook (lambda () (flymake-puppet-load)))
 (setq ido-auto-merge-work-directories-length -1)
 
@@ -503,8 +516,8 @@
 ;                         ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
 (package-initialize)
-(mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
-(mmm-add-mode-ext-class 'html-mode "\\.mak\\'" 'mako)
+;(mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
+;(mmm-add-mode-ext-class 'html-mode "\\.mak\\'" 'mako)
 (setq web-mode-engines-alist
   '(("dust"    . "\\.html\\'"))
   )
@@ -521,7 +534,7 @@
                         '("\\.html$" . web-mode)
                         '("\\.mustache$" . web-mode)
                         '("\\.java$" . java-mode)
-                        '("CMake" . cmake-mode)
+                        '("CMake" . cmake-m2ode)
                         '("\\.frag" . c++-mode)
                         '("\\.vert" . c++-mode)
                         '("\\.cg" . c++-mode)
@@ -531,6 +544,7 @@
                         '("\\.tf" . conf-mode)
                         '("\\.tfvars" . conf-mode)
                         '("\\.twig" . web-mode)
+                        '("\\.vue" . web-mode)
             )
                        auto-mode-alist))
 
@@ -549,3 +563,25 @@
   "de-urlencode the region between START and END in current buffer."
   (interactive "r")
   (func-region start end #'url-unhex-string))
+
+(defun my-csharp-mode-setup ()
+  (omnisharp-mode)
+  (company-mode)
+  (flycheck-mode)
+
+  (setq indent-tabs-mode nil)
+  (setq c-syntactic-indentation t)
+  (c-set-style "ellemtel")
+  (setq c-basic-offset 4)
+  (setq truncate-lines t)
+  (setq tab-width 4)
+  (setq evil-shift-width 4)
+
+  ;csharp-mode README.md recommends this too
+  ;(electric-pair-mode 1)       ;; Emacs 24
+  ;(electric-pair-local-mode 1) ;; Emacs 25
+
+  (local-set-key (kbd "C-c r r") 'omnisharp-run-code-action-refactoring)
+  (local-set-key (kbd "C-c C-c") 'recompile))
+
+(add-hook 'csharp-mode-hook 'my-csharp-mode-setup t)
