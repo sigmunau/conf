@@ -1,0 +1,24 @@
+#!/bin/bash
+# Helper script for omnisharp-vscode when starting up the omnisharp server.
+# You probably want to use this as your `omnisharp.path`.
+
+DIR="$(pwd)"
+ROOT="$DIR"
+
+# This runs the docker image with the following interesting bits:
+#
+# - Remove the image after run.
+# - Interactive session
+# - Bind stdio to the caller
+# - Exposes host process space (For the auto-shutdown option)
+# - Mounts the project directory to /app in the container.
+# - Starts OmniSharp with the arguments provided by vscode.
+docker run --rm -i -a STDIN -a STDOUT -a STDERR --pid=host \
+       -e HOME=/user \
+       -e OMNISHARP_RoslynExtensionsOptions:enableAnalyzersSupport=true \
+       -v ${ROOT}/.dotnet:/user \
+       -v ${ROOT}:${ROOT} -w ${DIR} \
+       -u $UID \
+       omnisharp \
+       /app/run \
+       $@ -s $DIR

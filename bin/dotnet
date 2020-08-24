@@ -1,0 +1,63 @@
+#! /bin/bash
+DOTNET_VERSION=${DOTNET_VERSION:-3.1}
+IMAGE="mcr.microsoft.com/dotnet/core/sdk:$DOTNET_VERSION"
+DIR=$(pwd)
+
+while [ "$(pwd)" != $HOME -a -z "$(ls *.sln 2>/dev/null)" ]
+do
+    cd ..
+done
+ROOT=$(pwd)
+#echo "Found project root: $ROOT"
+
+if [ ! -d "${ROOT}/.dotnet" ]
+then
+    mkdir "${ROOT}/.dotnet"
+    mkdir -p "${ROOT}/.dotnet/.nuget/NuGet"
+    docker run -ti --rm $IMAGE cat /root/.nuget/NuGet/NuGet.Config > "${ROOT}/.dotnet/.nuget/NuGet/NuGet.Config"
+    docker run -e HOME=/user -v ${ROOT}/.dotnet:/user -ti --rm  mcr.microsoft.com/dotnet/core/sdk:3.1 sh -c 'wget -qO- https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | bash'
+fi
+
+cmd="$1"
+if [[ $cmd == ./* ]]
+then
+    dotnet=""
+else
+    if [[ $cmd == /* ]]
+    then
+        dotnet=""
+    else
+        dotnet="dotnet"
+    fi
+fi
+
+if [ -f docker-compose.yml ]
+then
+    containerid=$(docker-compose ps -q|tail -n 1)
+    network=$(docker inspect $containerid|jq -r '.[0].HostConfig.NetworkMode')
+    if [ -n "$network" ]
+    then
+        network="--network=$network"
+    fi
+fi
+
+NAME="$(echo "omnisharp-${DIR}"|sed s!/!_!g)"
+
+docker kill "${NAME}" >/dev/null 2>/dev/null || true
+
+docker run -ti --rm \
+       --name "${NAME}" \
+       $network \
+       -p 5000:5000 \
+       -e HOME=/user \
+       -e PAT \
+       -e GITLAB_PACKAGES_USER \
+       -e GITLAB_PACKAGES_PASSWORD \
+       -e NUGET_CREDENTIALPROVIDER_SESSIONTOKENCACHE_ENABLED=true \
+       -e VSS_NUGET_EXTERNAL_FEED_ENDPOINTS="{\"endpointCredentials\": [{\"endpoint\":\"https://pkgs.dev.azure.com/idfy-io/_packaging/idfy/nuget/v3/index.json\", \"username\":\"ArtifactsDocker\", \"password\":\"${PAT}\"}, {\"endpoint\":\"https://gitlab.com/api/v4/projects/18876106/packages/nuget/index.json\", \"username\":\"${GITLAB_PACKAGES_USER}\", \"password\":\"${GITLAB_PACKAGES_PASSWORD}\"}]}" \
+       -v ~/AuthSolution/auth-server/ca/ca.pem:/etc/ssl/certs/authsolution.pem \
+       -v ${ROOT}/.dotnet:/user \
+       -v ${ROOT}:${ROOT} -w ${DIR} \
+       -u $UID \
+       $IMAGE \
+       $dotnet "$@"
