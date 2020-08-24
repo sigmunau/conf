@@ -102,3 +102,28 @@ case $TERM in
         precmd () {print -Pn "\e]0;%n@%m: %~\a"}
         ;;
 esac
+
+_command_time_preexec() {
+    timer=${timer:-$SECONDS}
+    timercmd=$3
+    timerwd=$(pwd)
+}
+
+_command_time_precmd() {
+  if [ $timer ]; then
+    timer_show=$(($SECONDS - $timer))
+    if [ $timer_show -ge ${ZSH_COMMAND_TIME_MIN_SECONDS:-300} ]; then
+        if ! gnome-screensaver-command -q|grep -q 'is active'
+        then
+            return
+        fi
+        message="Completed command \\\"${timercmd}\\\" in ${timerwd} in ${timer_show}s"
+        print -P $message
+        curl -X POST --data-urlencode "payload={\"username\": \"webhookbot\", \"text\": \"$message.\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+    fi
+    unset timer
+  fi
+}
+
+precmd_functions+=(_command_time_precmd)
+preexec_functions+=(_command_time_preexec)
